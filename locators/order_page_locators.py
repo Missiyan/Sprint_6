@@ -22,3 +22,4 @@ class OrderPageLocators:
     CONFIRM_YES_BUTTON = (By.XPATH, "//button[text()='Да']")
     SUCCESS_POPUP = (By.CLASS_NAME, "Order_Modal__YZ-d3")
     SUCCESS_MESSAGE = (By.XPATH, "//div[contains(text(), 'Заказ оформлен')]")
+    YANDEX_NO_THANKS_BUTTON = (By.XPATH, "//button[contains(text(), 'Нет, спасибо')]")
