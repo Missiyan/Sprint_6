@@ -7,7 +7,7 @@ from data import DZEN_URL_PART
 class MainPage(BasePage):
     def click_faq_question(self, index):
         questions = self.find_elements(MainPageLocators.FAQ_QUESTIONS)
-        self.driver.execute_script("arguments[0].click();", questions[index])
+        self.click_js_element(questions[index])
         self.wait.until(
             lambda d: self.find_elements(MainPageLocators.FAQ_ANSWERS)[index].is_displayed()
         )
@@ -26,16 +26,13 @@ class MainPage(BasePage):
 
     def click_yandex_logo(self):
         self.click(MainPageLocators.YANDEX_LOGO)
-
-    def get_current_url(self):
-        return self.driver.current_url
     
     def accept_cookies(self):
         try:
             self.click(MainPageLocators.COOKIE_ACCEPT_BUTTON)
         except Exception:
             pass
-            
+
     def click_order_button(self, position):
         """position: 'top' или 'bottom'"""
         if position == "top":
@@ -44,17 +41,12 @@ class MainPage(BasePage):
             self.click(MainPageLocators.ORDER_BUTTON_BOTTOM)
 
     def click_yandex_logo_and_switch_to_new_window(self):
-        original_window = self.driver.current_window_handle
-        windows_before = self.driver.window_handles
-
+        original_window = self.get_current_window_handle()
+        windows_before = self.get_window_handles()
         self.click(MainPageLocators.YANDEX_LOGO)
+        self.wait_for_new_window(windows_before)
+        new_window = [w for w in self.get_window_handles() if w != original_window][0]
+        self.switch_to_window(new_window)
 
-        self.wait.until(lambda d: len(d.window_handles) > len(windows_before))
-        new_window = [w for w in self.driver.window_handles if w != original_window][0]
-        self.driver.switch_to.window(new_window)
-
-            
     def wait_for_dzen_redirect(self, timeout=20):
-        WebDriverWait(self.driver, timeout).until(
-            lambda d: DZEN_URL_PART in d.current_url
-        )
+        self.wait_for_url_contains(DZEN_URL_PART, timeout)

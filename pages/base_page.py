@@ -38,3 +38,28 @@ class BasePage:
             self.click(MainPageLocators.COOKIE_ACCEPT_BUTTON)
         except Exception:
             pass
+
+    def click_js_element(self, element):
+        self.driver.execute_script("arguments[0].click();", element)
+
+    def get_current_url(self):
+        return self.driver.current_url
+
+    def get_current_window_handle(self):
+        return self.driver.current_window_handle
+
+    def get_window_handles(self):
+        return self.driver.window_handles
+
+    def switch_to_window(self, window_handle):
+        self.driver.switch_to.window(window_handle)
+
+    def wait_for_new_window(self, windows_before, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            lambda d: len(d.window_handles) > len(windows_before)
+        )
+
+    def wait_for_url_contains(self, url_part, timeout=20):
+        WebDriverWait(self.driver, timeout).until(
+            lambda d: url_part in d.current_url
+        )

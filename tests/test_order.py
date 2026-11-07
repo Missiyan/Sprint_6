@@ -40,6 +40,5 @@ class TestOrder:
         page = MainPage(driver)
         page.accept_cookies()
         page.click_yandex_logo_and_switch_to_new_window()
-        #page.close_yandex_browser_promo_if_present()
         page.wait_for_dzen_redirect()
         assert DZEN_URL_PART in page.get_current_url()
